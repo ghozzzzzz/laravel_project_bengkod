@@ -63,18 +63,6 @@
           </div>
         </div>
         <div class="input-group mb-3">
-          <select name="role" class="form-control" required>
-            <option value="" disabled selected>Pilih Role</option>
-            <option value="dokter" {{ old('role') == 'dokter' ? 'selected' : '' }}>Dokter</option>
-            <option value="pasien" {{ old('role') == 'pasien' ? 'selected' : '' }}>Pasien</option>
-          </select>
-          <div class="input-group-append">
-            <div class="input-group-text">
-              <span class="fas fa-user-tag"></span>
-            </div>
-          </div>
-        </div>
-        <div class="input-group mb-3">
           <input type="password" name="password" class="form-control" placeholder="Password" required>
           <div class="input-group-append">
             <div class="input-group-text">

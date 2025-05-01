@@ -18,6 +18,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::middleware(['auth', 'role:dokter'])->prefix('dokter')->group(function () {
     Route::get('/dashboard', fn () => view('dokter.index'))->name('dokter.dashboard');
     Route::get('/obat', [ObatController::class, 'index'])->name('obat.index');
+    Route::get('/obat/create', [ObatController::class, 'create'])->name('obat.create');
     Route::post('/obat', [ObatController::class, 'store'])->name('obat.store');
     Route::get('/obat/{id}/edit', [ObatController::class, 'edit'])->name('obat.edit');
     Route::put('/obat/{id}', [ObatController::class, 'update'])->name('obat.update');
@@ -33,4 +34,5 @@ Route::middleware(['auth', 'role:pasien'])->prefix('pasien')->group(function () 
     Route::get('/dashboard', fn () => view('pasien.index'))->name('pasien.dashboard');
     Route::get('/periksa', [PeriksaController::class, 'create'])->name('pasien.periksa.create');
     Route::post('/periksa', [PeriksaController::class, 'store'])->name('pasien.periksa.store');
+    Route::get('/periksa/{id}/detail', [PeriksaController::class, 'detail'])->name('pasien.periksa.detail');
 });

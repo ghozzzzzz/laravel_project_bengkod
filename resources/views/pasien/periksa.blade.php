@@ -27,7 +27,7 @@
             <form action="{{ route('pasien.periksa.store') }}" method="POST">
                 @csrf
                 <div class="form-group mb-3">
-                    <label for="id_d Paulaokter">Pilih Dokter</label>
+                    <label for="id_dokter">Pilih Dokter</label>
                     <select name="id_dokter" id="id_dokter" class="form-control @error('id_dokter') is-invalid @enderror" required>
                         <option value="">-- Pilih Dokter --</option>
                         @foreach ($dokters as $dokter)
@@ -65,6 +65,7 @@
                             <th>Tanggal</th>
                             <th>Biaya</th>
                             <th>Status</th>
+                            <th>Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -86,6 +87,11 @@
                                     @else
                                         <span class="badge bg-warning text-dark">Menunggu Pemeriksaan</span>
                                     @endif
+                                </td>
+                                <td>
+                                    <a href="{{ route('pasien.periksa.detail', $item->id) }}" class="btn btn-info btn-sm">
+                                        Detail
+                                    </a>
                                 </td>
                             </tr>
                         @endforeach

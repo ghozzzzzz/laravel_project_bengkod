@@ -4,15 +4,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-
 class DetailPeriksa extends Model
 {
-    use HasFactory;
-
-    protected $fillable = [
-        'id_periksa',
-        'id_obat'
-    ];
+    protected $table = 'detail_periksas'; // Tentukan nama tabel
+    protected $primaryKey = 'id';
+    protected $fillable = ['id_periksa', 'id_obat'];
 
     public function periksa(): BelongsTo
     {

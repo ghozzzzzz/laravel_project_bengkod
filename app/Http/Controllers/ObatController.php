@@ -13,6 +13,10 @@ class ObatController extends Controller
         return view('dokter.obat', compact('obats'));
     }
 
+public function create()
+    {
+        return view('dokter.tambah_obat');
+    }
     public function store(Request $request)
     {
         $request->validate([

@@ -20,7 +20,7 @@
         </div>
     @endif
 
-    <form action="{{ route('dokter.periksa.update', $periksa->id) }}" method="POST">
+    <form action="{{ route('dokter.periksa.update', $periksa->id) }}" method="POST" id="periksa-form">
         @csrf
         @method('PUT')
 
@@ -44,7 +44,7 @@
 
         <div class="form-group mb-3">
             <label for="obat-select">Pilih Obat</label>
-            <select class="form-control @error('obat_id') is-invalid @enderror" id="obat-select">
+            <select class="form-control @error('obat_id') is-invalid @enderror" id="obat-select" name="obat_id_select">
                 <option value="">-- Pilih Obat --</option>
                 @foreach($obats as $obat)
                     <option value="{{ $obat->id }}" data-nama_obat="{{ $obat->nama_obat ?? 'Nama Tidak Tersedia' }}" data-harga="{{ $obat->harga ?? 0 }}">
@@ -76,7 +76,7 @@
     const listEl = document.getElementById('obat-list');
     const totalEl = document.getElementById('total-harga');
     const hiddenTotalEl = document.getElementById('hidden-total-harga');
-    const form = document.querySelector('form');
+    const form = document.getElementById('periksa-form');
 
     let selectedObats = [];
     let basePrice = 150000; // Biaya dasar pemeriksaan
@@ -110,7 +110,8 @@
         const harga = parseInt(selectedOption.getAttribute('data-harga')) || 0;
 
         if (!selectedObats.find(obat => obat.id == id)) {
-            selectedObats.push({ id, nama, harga });
+            selectedObats.push({ id: parseInt(id), nama, harga });
+            console.log('Obat ditambahkan:', selectedObats);
             updateList();
             updateTotal();
         }
@@ -120,8 +121,6 @@
 
     function updateList() {
         listEl.innerHTML = '';
-
-        // Hapus input hidden lama
         form.querySelectorAll('input[name="obat_id[]"]').forEach(el => el.remove());
 
         selectedObats.forEach(obat => {
@@ -133,12 +132,12 @@
             `;
             listEl.appendChild(li);
 
-            // Tambah hidden input ke dalam form
             const input = document.createElement('input');
             input.type = 'hidden';
             input.name = 'obat_id[]';
             input.value = obat.id;
             form.appendChild(input);
+            console.log('Input hidden dibuat:', input);
         });
     }
 
@@ -154,5 +153,10 @@
         updateList();
         updateTotal();
     }
+
+    form.addEventListener('submit', function (e) {
+        const formData = new FormData(form);
+        console.log('Form disubmit dengan data:', Object.fromEntries(formData));
+    });
 </script>
 @endsection

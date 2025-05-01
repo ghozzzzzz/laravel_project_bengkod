@@ -7,6 +7,7 @@ use App\Models\Obat;
 use App\Models\DetailPeriksa;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class PemeriksaanController extends Controller
 {
@@ -35,6 +36,10 @@ class PemeriksaanController extends Controller
      */
     public function update(Request $request, $id)
     {
+        // Log input untuk debugging
+        Log::info('Input diterima di update pemeriksaan:', $request->all());
+
+        // Validasi input
         $request->validate([
             'catatan' => 'required|string|max:1000',
             'obat_id' => 'nullable|array',
@@ -51,19 +56,27 @@ class PemeriksaanController extends Controller
             'total_harga.min' => 'Total harga tidak boleh negatif.',
         ]);
 
+        // Cari pemeriksaan
         $periksa = Periksa::where('id_dokter', Auth::id())->findOrFail($id);
 
         // Hapus detail periksa lama
-        $periksa->detail_periksa()->delete();
+        DetailPeriksa::where('id_periksa', $periksa->id)->delete();
 
         // Tambahkan obat baru jika ada
-        if ($request->has('obat_id') && is_array($request->obat_id)) {
-            foreach ($request->obat_id as $obatId) {
+        $obatIds = $request->input('obat_id', []);
+        if (!empty($obatIds)) {
+            foreach ($obatIds as $obatId) {
+                Log::info('Menyimpan detail_periksa:', [
+                    'id_periksa' => $periksa->id,
+                    'id_obat' => $obatId,
+                ]);
                 DetailPeriksa::create([
                     'id_periksa' => $periksa->id,
                     'id_obat' => $obatId,
                 ]);
             }
+        } else {
+            Log::info('Tidak ada obat_id yang diterima di update pemeriksaan');
         }
 
         // Update data pemeriksaan

@@ -1,7 +1,5 @@
 <?php
-
 namespace App\Http\Controllers;
-
 use App\Models\Periksa;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -21,7 +19,6 @@ class PeriksaController extends Controller
             ->where('id_pasien', Auth::id())
             ->orderBy('tgl_periksa', 'desc')
             ->get();
-
         return view('pasien.periksa', compact('dokters', 'riwayat'));
     }
 
@@ -57,6 +54,29 @@ class PeriksaController extends Controller
     }
 
     /**
+     * Menampilkan detail pemeriksaan untuk pasien.
+     *
+     * @param  int  $id
+     * @return \Illuminate\View\View
+     */
+    public function detail($id)
+    {
+        // Load relasi lebih lengkap untuk memastikan data obat terambil dengan benar
+        $periksa = Periksa::with([
+            'dokter', 
+            'detail_periksa', 
+            'detail_periksa.obat'
+        ])
+        ->where('id_pasien', Auth::id())
+        ->findOrFail($id);
+        
+        // Debug untuk melihat data yang diambil
+        // dd($periksa->toArray());
+            
+        return view('pasien.detail_periksa', compact('periksa'));
+    }
+
+    /**
      * Menampilkan daftar pasien yang akan diperiksa oleh dokter.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -76,7 +96,6 @@ class PeriksaController extends Controller
         }
 
         $periksas = $query->get();
-
         return view('dokter.memeriksa', compact('periksas'));
     }
 }
